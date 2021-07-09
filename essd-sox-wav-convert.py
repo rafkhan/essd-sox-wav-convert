@@ -6,9 +6,16 @@ from pathlib import Path
 # https://www.threetom.com/news/batch-conversion-of-samples-for-erica-sample-drum/
 # sox -G input.wav --norm=-1 -b 16 -r 48k -c 1 output.wav
 
-def sox_convert_file(root, filename, srcdir_prefix):
-  # os.
-  print(root[srcdir_prefix:] + '/' + filename)
+def sox_convert_file(root, filename, outputroot, srcdir_prefix):
+  # os.execl()
+  final_in_path = os.path.join(root,filename)
+  final_out_path = os.path.join(outputroot, root[srcdir_prefix:], filename)
+  # print(final_in_path)
+  # print(final_out_path)
+  cmd = "sox -G \"" + final_in_path + "\" --norm=-1 -b 16 -r 44.1k -c 1 \"" + final_out_path + "\""
+  print(cmd)
+  # os.system('ls -l')
+  # print(root[srcdir_prefix:] + '/' + filename)
 
 def get_srcdir_prefix_index(srcdir):
     srcdir = os.path.abspath(srcdir)
@@ -32,7 +39,7 @@ def convert_input_directory(inputpath, outputpath):
   for root, _, f_names in os.walk(inputpath):
     for filename in f_names:
       if filename.endswith(('.wav', '.mp3', '.aiff')):
-        sox_convert_file(root, filename, srcdir_prefix)
+        sox_convert_file(root, filename, outputpath, srcdir_prefix)
 
 def main():
   inputpath = ''
@@ -53,7 +60,7 @@ def main():
         inputpath = Path(arg).resolve()
 
     elif opt in ("-o", "--out"):
-        outputpath = Path(arg).resolve(arg)
+        outputpath = arg
 
   print('Reading from', inputpath)
   print('Writing to', outputpath)
