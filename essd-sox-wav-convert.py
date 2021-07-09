@@ -3,9 +3,14 @@ import getopt
 import os
 from pathlib import Path
 
-def getfiles(path):
-  for root, d_names, f_names in os.walk(path):
-    print(root, d_names, f_names)
+def sox_convert_file(root, filename):
+  print(root + '/' + filename)
+
+def convert_input_directory(path):
+  for root, _, f_names in os.walk(path):
+    for filename in f_names:
+      if filename.endswith(('.wav', '.mp3', '.aiff')):
+        sox_convert_file(root, filename)
 
 def main():
   inputpath = ''
@@ -26,13 +31,11 @@ def main():
         inputpath = Path(arg).resolve()
 
     elif opt in ("-o", "--out"):
-        outputpath = arg
+        outputpath = Path(arg).resolve(arg)
 
-  print(inputpath)
-  print(outputpath)
-
-  getfiles(inputpath)
-
+  print('Reading from', inputpath)
+  print('Writing to', outputpath)
+  convert_input_directory(inputpath)
 
 if __name__ == "__main__":
    main()
