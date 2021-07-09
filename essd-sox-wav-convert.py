@@ -4,18 +4,14 @@ import os
 from pathlib import Path
 
 # https://www.threetom.com/news/batch-conversion-of-samples-for-erica-sample-drum/
-# sox -G input.wav --norm=-1 -b 16 -r 48k -c 1 output.wav
+# sox -G input.wav --norm=-1 -b 16 -r 44.1k -c 1 output.wav
 
 def sox_convert_file(root, filename, outputroot, srcdir_prefix):
-  # os.execl()
   final_in_path = os.path.join(root,filename)
   final_out_path = os.path.join(outputroot, root[srcdir_prefix:], filename)
-  # print(final_in_path)
-  # print(final_out_path)
   cmd = "sox -G \"" + final_in_path + "\" --norm=-1 -b 16 -r 44.1k -c 1 \"" + final_out_path + "\""
-  print(cmd)
-  # os.system('ls -l')
-  # print(root[srcdir_prefix:] + '/' + filename)
+  print(final_out_path)
+  os.system(cmd)
 
 def get_srcdir_prefix_index(srcdir):
     srcdir = os.path.abspath(srcdir)
@@ -63,7 +59,6 @@ def main():
         outputpath = arg
 
   print('Reading from', inputpath)
-  print('Writing to', outputpath)
   convert_input_directory(inputpath, outputpath)
 
 if __name__ == "__main__":
